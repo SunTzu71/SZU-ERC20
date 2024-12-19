@@ -218,4 +218,25 @@ contract OurTokenTest is Test {
         vm.expectRevert();
         token.decreaseAllowance(alice, decreaseAmount);
     }
+
+    /*
+     * Tests token burning functionality by sending to a dead address.
+     * 1. Sets burn amount to 50 ether
+     * 2. Records initial total supply
+     * 3. Bob transfers tokens to dead address (0xdead)
+     * 4. Verifies total supply remains unchanged
+     * 5. Verifies Bob's balance decreased by burn amount
+     * 6. Verifies dead address received the burned tokens
+     */
+    function testBurnTokens() public {
+        uint256 burnAmount = 50 ether;
+        uint256 initialSupply = token.totalSupply();
+
+        vm.prank(bob);
+        token.transfer(address(0xdead), burnAmount);
+
+        assertEq(token.totalSupply(), initialSupply);
+        assertEq(token.balanceOf(bob), STARTING_BALANCE - burnAmount);
+        assertEq(token.balanceOf(address(0xdead)), burnAmount);
+    }
 }

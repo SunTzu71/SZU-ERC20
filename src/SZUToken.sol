@@ -25,7 +25,7 @@ contract SZUToken is ERC20 {
         address spender,
         uint256 addedValue
     ) public virtual returns (bool) {
-        address owner = _msgSender();
+        address owner = msg.sender;
         _approve(owner, spender, allowance(owner, spender) + addedValue);
         return true;
     }
@@ -42,7 +42,7 @@ contract SZUToken is ERC20 {
         address spender,
         uint256 subtractedValue
     ) public virtual returns (bool) {
-        address owner = _msgSender();
+        address owner = msg.sender;
         uint256 currentAllowance = allowance(owner, spender);
         require(
             currentAllowance >= subtractedValue,
@@ -53,5 +53,15 @@ contract SZUToken is ERC20 {
         }
 
         return true;
+    }
+
+    /*
+     * @dev Burns a specific amount of tokens from the caller's account
+     * @param amount The amount of tokens to burn
+     * Burns (destroys) the specified amount of tokens from the caller's address
+     * Reduces the total supply by the burned amount
+     */
+    function burn(uint256 amount) public {
+        _burn(msg.sender, amount);
     }
 }
