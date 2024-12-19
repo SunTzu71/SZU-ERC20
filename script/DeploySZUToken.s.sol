@@ -7,9 +7,10 @@ import {SZUToken} from "../src/SZUToken.sol";
 contract DeploySZUToken is Script {
     uint256 public constant INITIAL_SUPPLY = 1000 ether;
 
-    function run() external {
+    function run() external returns (SZUToken) {
         vm.startBroadcast();
-        new SZUToken(INITIAL_SUPPLY);
+        SZUToken token = new SZUToken(INITIAL_SUPPLY);
         vm.stopBroadcast();
+        return token;
     }
 }
