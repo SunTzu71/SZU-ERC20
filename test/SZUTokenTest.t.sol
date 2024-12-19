@@ -197,4 +197,25 @@ contract OurTokenTest is Test {
 
         assertEq(token.allowance(bob, alice), allowanceAmount - decreaseAmount);
     }
+
+    /*
+     * Tests decrease allowance below zero.
+     * 1. Sets initial allowance to 1000
+     * 2. Bob approves Alice for initial allowance amount
+     * 3. Verifies initial allowance is set correctly
+     * 4. Bob attempts to decrease Alice's allowance by 1100
+     * 5. Verifies transaction reverts since decrease would put allowance below zero
+     */
+    function testDecreaseAllowanceBelowZero() public {
+        uint256 allowanceAmount = 1000;
+        uint256 decreaseAmount = 1100;
+
+        vm.prank(bob);
+        token.approve(alice, allowanceAmount);
+        assertEq(token.allowance(bob, alice), allowanceAmount);
+
+        vm.prank(bob);
+        vm.expectRevert();
+        token.decreaseAllowance(alice, decreaseAmount);
+    }
 }
