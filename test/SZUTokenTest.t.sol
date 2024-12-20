@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {DeploySZUToken} from "../script/DeploySZUToken.s.sol";
 import {SZUToken} from "../src/SZUToken.sol";
 
-contract OurTokenTest is Test {
+contract SZUTokenTest is Test {
     SZUToken public token;
     DeploySZUToken public deployToken;
 
