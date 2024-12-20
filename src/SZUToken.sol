@@ -15,6 +15,39 @@ contract SZUToken is ERC20 {
     }
 
     /*
+     * @dev Transfers tokens to multiple recipients in a single transaction
+     * @param recipients Array of addresses to receive tokens
+     * @param amounts Array of token amounts to send to each recipient
+     * @return bool indicating success of all transfers
+     * Requires that recipients and amounts arrays have same length
+     * Requires that arrays are not empty
+     * Requires that sender has sufficient balance for total amount
+     * Requires that no recipient address is zero address
+     * Transfers specified amounts to each recipient address
+     */
+    function batchTransfer(
+        address[] calldata recipients,
+        uint256[] calldata amounts
+    ) public returns (bool) {
+        require(recipients.length == amounts.length, "Invalid array length");
+        require(recipients.length > 0, "Empty array");
+
+        uint256 total = 0;
+        for (uint i = 0; i < amounts.length; i++) {
+            total += amounts[i];
+        }
+
+        require(balanceOf(msg.sender) >= total, "Insufficient balance");
+
+        for (uint256 i = 0; i < recipients.length; i++) {
+            require(recipients[i] != address(0), "Invalid recipient address");
+            transfer(recipients[i], amounts[i]);
+        }
+
+        return true;
+    }
+
+    /*
      * @dev Increases the allowance granted to `spender` by the caller by `addedValue`
      * @param spender The address which will be granted increased allowance
      * @param addedValue The amount by which to increase the allowance
